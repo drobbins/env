@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+    username: robbinsd
+  tasks:
+  - name: Create robbinsd user
+    sudo: true
+    user: name={{username}}
+    register: robbinsd

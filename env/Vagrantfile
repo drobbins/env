@@ -9,4 +9,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "chef/centos-6.5"
 
+  # Configure using Ansible
+  config.vm.provision "ansible" do |ansible|
+        ansible.playbook = "replicator.yml"
+  end
+
 end
