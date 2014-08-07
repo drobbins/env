@@ -7,13 +7,5 @@
     sudo: true
     yum: name=libselinux-python state=present
   roles:
+      - robbinsd
       - { role: goozbach.EPEL, epel_enabled: 0, sudo: yes }
-  tasks:
-  - name: Create robbinsd user
-    sudo: true
-    user: name={{username}}
-    register: robbinsd
-  - debug: var=robbinsd
-  - name: Add robbinsd ssh key
-    sudo: yes
-    authorized_key: user={{username}} key="{{ lookup('file', 'files/ssh/id_rsa.pub') }}"

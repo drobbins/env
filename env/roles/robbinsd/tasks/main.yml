@@ -1,0 +1,11 @@
+---
+- name: Create robbinsd user
+  sudo: yes
+  user: name={{username}}
+  register: robbinsd
+
+- name: Add robbinsd ssh key
+  sudo: yes
+  authorized_key: user={{username}} key="{{lookup('file','ssh/id_rsa.pub')}}"
+
+- debug: var=robbinsd
