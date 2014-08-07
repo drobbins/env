@@ -1,0 +1,10 @@
+- name: Install common packages
+  yum: name={{ item }} state=latest
+  with_items:
+   - vim-common
+   - vim-minimal
+   - vim-enhanced
+   - git
+   - make
+- name: Install npm and Node
+  yum: name=npm enablerepo=epel state=present
