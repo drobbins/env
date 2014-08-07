@@ -2,6 +2,11 @@
 - hosts: all
   vars:
     username: robbinsd
+    stardog_home: "/stardog/data"
+    stardog_version: "stardog-2.2"
+    stardog_license: "stardog-license-key.bin"
+    java_packages:
+      - java-1.6.0-openjdk
   pre_tasks:
   - name: Install libselinux-python
     sudo: true
@@ -10,3 +15,17 @@
       - { role: goozbach.EPEL, epel_enabled: 0, sudo: yes }
       - { role: base, sudo: yes }
       - robbinsd
+      - { role: geerlingguy.java, sudo: yes} # Stardog requires Java
+
+  # Stardog
+  - file: path={{stardog_home}} state=directory owner=vagrant
+    sudo: true
+  - name: Copy Stardog
+    sudo: true
+    unarchive: src="../{{stardog_version}}.zip" dest=/stardog/
+  - name: Copy Stardog License
+    copy: src="../{{stardog_license}}" dest={{stardog_home}}
+  - name: Start Stardog
+    environment:
+      STARDOG_HOME: "{{stardog_home}}"
+    command: "{{stardog_home}}/../{{stardog_version}}/bin/stardog-admin server start"
