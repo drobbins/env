@@ -9,3 +9,11 @@
   authorized_key: user={{username}} key="{{lookup('file','ssh/id_rsa.pub')}}"
 
 - debug: var=robbinsd
+
+- name: Configure git name
+  remote_user: "{{username}}"
+  command: "git config --global user.name \"{{name}}\""
+
+- name: Configure git email
+  remote_user: "{{username}}"
+  command: "git config --global user.email \"{{git_email}}\""
