@@ -17,3 +17,27 @@
 - name: Configure git email
   remote_user: "{{username}}"
   command: "git config --global user.email \"{{git_email}}\""
+
+- name: Checkout z
+  remote_user: "{{username}}"
+  git: repo="https://github.com/rupa/z.git" dest={{robbinsd.home}}/code/z
+
+- name: Checkout dotfiles
+  remote_user: "{{username}}"
+  git: repo={{dotfiles_repo}} dest={{robbinsd.home}}/dotfiles recursive=yes
+
+- name: Link bash dotfiles
+  remote_user: "{{username}}"
+  file: dest={{robbinsd.home}}/{{item}} src={{robbinsd.home}}/dotfiles/bash/{{item}} state=link force=yes
+  with_items:
+    - .bashrc
+    - .aliases
+    - .bash_profile
+
+- name: Link .vimrc
+  remote_user: "{{username}}"
+  file: dest={{robbinsd.home}}/.vimrc src={{robbinsd.home}}/dotfiles/vim/.vimrc state=link force=yes
+
+- name: Link .vim
+  remote_user: "{{username}}"
+  file: dest={{robbinsd.home}}/.vim src={{robbinsd.home}}/dotfiles/vim state=link force=yes
