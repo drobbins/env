@@ -14,4 +14,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.playbook = "replicator.yml"
   end
 
+  # Share the application's directory
+  config.vm.synced_folder "../", "/app"
+
 end
