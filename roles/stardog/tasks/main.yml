@@ -1,0 +1,15 @@
+# Stardog
+- name: Install unzip
+  sudo: true
+  yum: name=unzip state=present
+- file: path={{stardog_home}} state=directory owner=vagrant
+  sudo: true
+- name: Copy Stardog
+  sudo: true
+  unarchive: src="{{stardog_version}}.zip" dest={{stardog_root}}
+- name: Copy Stardog License
+  copy: src="{{stardog_license}}" dest={{stardog_home}}
+- name: Start Stardog
+  environment:
+    STARDOG_HOME: "{{stardog_home}}"
+  shell: "{{stardog_app}}/bin/stardog-admin server start"

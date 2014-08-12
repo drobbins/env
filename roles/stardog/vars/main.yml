@@ -1,0 +1,6 @@
+---
+stardog_root: "/stardog"
+stardog_version: "stardog-2.2"
+stardog_license: "stardog-license-key.bin"
+stardog_home: "{{stardog_root}}/data"
+stardog_app: "{{stardog_root}}/{{stardog_version}}"
