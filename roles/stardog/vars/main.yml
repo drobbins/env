@@ -1,6 +1,7 @@
 ---
-stardog_root: "/stardog"
-stardog_version: "stardog-2.2"
+stardog_version: "2.2"
+stardog_app: "/opt/stardog-{{stardog_version}}"
+stardog_bin: "{{stardog_app}}/bin"
+stardog_home: "/var/db/stardog"
 stardog_license: "stardog-license-key.bin"
-stardog_home: "{{stardog_root}}/data"
-stardog_app: "{{stardog_root}}/{{stardog_version}}"
+stardog_user: "vagrant"

@@ -2,14 +2,39 @@
 - name: Install unzip
   sudo: true
   yum: name=unzip state=present
-- file: path={{stardog_home}} state=directory owner=vagrant
+
+- file: path={{stardog_home}} state=directory owner={{stardog_user}}
   sudo: true
+
 - name: Copy Stardog
   sudo: true
-  unarchive: src="{{stardog_version}}.zip" dest={{stardog_root}}
+  unarchive: src="stardog-{{stardog_version}}.zip" dest=/opt creates={{stardog_bin}}
+  notify:
+    - Start stardog
+
 - name: Copy Stardog License
   copy: src="{{stardog_license}}" dest={{stardog_home}}
-- name: Start Stardog
-  environment:
-    STARDOG_HOME: "{{stardog_home}}"
-  shell: "{{stardog_app}}/bin/stardog-admin server start"
+  notify:
+    - Start stardog
+
+- name: Copy stardog-server into init.d
+  sudo: true
+  template: src=stardog-server.j2 dest=/etc/init.d/stardog-server mode=0755
+  notify:
+    - Start stardog
+
+- name: Make links for stardog command
+  sudo: true
+  file: src={{stardog_bin}}/stardog dest=/usr/bin/stardog mode=0755 state=link
+
+- name: Make links for stardog-admin command
+  sudo: true
+  file: src={{stardog_bin}}/stardog-admin dest=/usr/sbin/stardog-admin mode=0755 state=link
+
+- name: Start stardog
+  sudo: true
+  service: name=stardog-server state=started
+  #shell: "{{stardog_bin}}/stardog-admin server start --home {{stardog_home}} > {{stardog_home}}/startup.txt"
+  #async: 45
+  #poll: 0
+

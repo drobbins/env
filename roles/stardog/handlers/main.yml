@@ -1,0 +1,4 @@
+---
+- name: Start stardog
+  sudo: true
+  service: name=stardog-server state=started

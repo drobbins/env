@@ -1,0 +1,89 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          stardog-server
+# Required-Start:    $local_fs $network $named $time $syslog
+# Required-Stop:     $local_fs $network $named $time $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       Stardog is the leading enterprise graph database: search, query, reasoning, and constraints in a lightweight, pure Java system.
+### END INIT INFO
+
+# This is startup script for stardog server to be executed during system startup
+# (e.g., to be put in /etc/init.d together with other startup scripts)
+
+##########################################################################
+# IMPORTANT!!!                                                           #
+# Replace the values below with the right values for your configuration  #
+##########################################################################
+
+# Run stardog as the specified user
+# To run as root (discouraged), leave the value empty
+USERNAME={{stardog_user}}
+
+# stardog home
+STARDOG_HOME={{stardog_home}}
+
+# path to the directory where stardog CLI script is located
+STARDOG_BIN={{stardog_bin}}
+
+# log file
+LOG_FILE=${STARDOG_HOME}/stardog-server.log
+
+# specify port where server will be listening
+PORT=5820
+
+# Path to bash
+BASH=/bin/bash
+
+start()
+{
+  echo "Starting stardog"
+  if test -n "$USERNAME"; then
+    su $USERNAME - -c "$BASH ${STARDOG_BIN}/stardog-admin server start --logfile $LOG_FILE --home $STARDOG_HOME --port $PORT"
+  else
+    $BASH ${STARDOG_BIN}/stardog-admin server start --logfile $LOG_FILE --home $STARDOG_HOME --port $PORT
+  fi
+}
+
+stop()
+{
+  echo "Stopping stardog"
+  if test -n "$USERNAME"; then
+    su $USERNAME - -c "$BASH ${STARDOG_BIN}/stardog-admin --server snarl://localhost:$PORT/ server stop"
+  else
+    $BASH ${STARDOG_BIN}/stardog-admin --server snarl://localhost:$PORT/ server stop
+  fi
+}
+
+status() {
+  if [ -f $STARDOG_HOME/system.lock ]
+  then
+    echo "Stardog is running."
+  else
+    echo "Stardog is not running"
+    exit 3
+  fi
+}
+
+case "$1" in
+    status)
+        status
+        ;;
+
+    start)
+        start
+        ;;
+
+    stop)
+        stop
+        ;;
+
+    restart|reload)
+        stop
+        start
+        ;;
+
+    *)
+        echo "Usage: $0 {status|start|stop|restart}"
+        exit 1;
+esac
