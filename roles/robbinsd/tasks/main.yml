@@ -8,6 +8,10 @@
   sudo: yes
   authorized_key: user={{username}} key="{{lookup('file','ssh/id_rsa.pub')}}"
 
+- name: Give robbinsd sudo powers
+  sudo: yes
+  copy: src=robbinsd dest=/etc/sudoers.d/robbinsd
+
 - debug: var=robbinsd
 
 - name: Configure git name
